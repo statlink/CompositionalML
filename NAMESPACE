@@ -1,0 +1,19 @@
+#useDynLib(Compositional, .registration = TRUE)
+
+importFrom("Boruta", Boruta)
+importFrom("Compositional", alfa, makefolds)
+importFrom("e1071", svm)
+importFrom("graphics", abline)
+importFrom("Rfast", colmeans)
+importFrom("Rfast2", colaccs, colmses)
+importFrom("ranger", ranger)
+importFrom("stats", predict, ppr)
+
+import("doParallel")
+import("parallel")
+import("foreach")
+
+exportPattern("^[[:alpha:]]+")
+exportPattern("^[^\\.]")
+export(.onAttach)
+

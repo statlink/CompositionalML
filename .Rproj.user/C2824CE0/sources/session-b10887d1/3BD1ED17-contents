@@ -1,0 +1,87 @@
+\name{alpha-Boruta}
+\alias{alfa.boruta}
+\title{
+\eqn{\alpha}-Boruta variable selection
+}
+
+\description{
+\eqn{\alpha}-Boruta variable selection.
+}
+
+\usage{
+alfa.boruta(y, x,  a = seq(-1, 1, by = 0.1), runs = 100 )
+}
+
+\arguments{
+\item{y}{
+The response variable, it can either be a factor (for classification) or a
+numeric vector (for regression). Depending on the nature of the response
+variable, the function will proceed with the necessary task.
+}
+\item{x}{
+A matrix with the compositional data.
+}
+\item{a}{
+A vector with a grid of values of the power transformation, it has to be
+between -1 and 1. If zero values are present it has to be greater than 0.
+If a=0, the isometric log-ratio transformation is applied.
+}
+\item{runs}{
+Maximal number of importance source runs. You may increase it to
+avoid variables being characterised as "Tentative".
+}
+}
+
+\details{
+For each value of \eqn{\alpha}, the compositional data are transformed and then
+the Boruta variable selection algorithm is applied.
+}
+
+\value{
+A list with the results of the Boruta variable selection algortihm for each value of \eqn{\alpha}
+as returned by the function "Boruta" of the package \bold{Boruta}. The important elements
+are these (all the items returned by the function are of course included):
+\item{finalDecision}{
+A factor of three values: "Confirmed", "Rejected" or "Tentative"", for each variable,
+containing the final result of the variable selection.
+}
+\item{ImpHistory}{
+A data frame of importances of variables gathered in each importance source run.
+Beside the importances, it contains maximal, mean and minimal importance of shadow
+variables in each run. Rejected attributes get -Inf importance.
+Set to NULL if holdHistory was given FALSE.
+}
+}
+
+\references{
+Kursa M. B. and Rudnicki W. R. (2010). Feature Selection with the
+Boruta Package. Journal of Statistical Software, 36(11).
+
+Tsagris M.T., Preston S. and Wood A.T.A. (2011). A data-based power transformation
+for compositional data. In Proceedings of the 4th Compositional Data Analysis
+Workshop, Girona, Spain. https://arxiv.org/pdf/1106.1451.pdf
+}
+
+\author{
+Michail Tsagris.
+
+R implementation and documentation: Michail Tsagris \email{mtsagris@uoc.gr}.
+}
+
+%\note{
+%%  ~~further notes~~
+%}
+
+\seealso{
+\code{\link{alfa.rf}
+}
+}
+
+\examples{
+x <- as.matrix(iris[, 1:4])
+x <- x/ rowSums(x)
+y <- iris[, 5]
+mod <- alfa.boruta(y, x, a = c(0, 0.5))
+mod
+}
+
