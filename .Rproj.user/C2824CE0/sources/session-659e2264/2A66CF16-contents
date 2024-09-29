@@ -1,8 +1,8 @@
 Package: CompositionalML
 Type: Package
 Title: Machine Learning with Compositional Data  
-Version: 1.0
-Date: 2024-03-13
+Version: 1.1
+Date: 2024-09-29
 Authors@R: person("Michail", "Tsagris", role = c("aut", "cre"), email = "mtsagris@uoc.gr")
 Author: Michail Tsagris [aut, cre]
 Maintainer: Michail Tsagris <mtsagris@uoc.gr>

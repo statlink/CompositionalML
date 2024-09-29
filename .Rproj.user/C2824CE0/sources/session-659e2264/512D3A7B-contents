@@ -1,0 +1,40 @@
+comp.rf <- function(xnew, y, x, a = seq(-1, 1, by = 0.1), size = c(1, 2, 3),
+                    depth = c(0, 1), splits = 2:5, R = 500) {
+  
+  if ( min(x) == 0 )  a <- a[a > 0]
+  
+  config <- as.matrix( expand.grid(size = size, depth = depth, splits = splits, R = R) )
+  
+  mod <- list()
+  for ( k in 1:length(a) ) {
+    z <- Compositional::alfa(x, a[k])$aff
+    z <- as.data.frame(z)
+    xnew <- as.matrix(xnew)
+    if ( dim(xnew)[1] == 1 )  xnew <- t(xnew)
+    znew <- Compositional::alfa(xnew, a[k])$aff
+    znew <- as.data.frame(znew)
+    mod[[ k ]] <- .rfmodel(znew, y, z, config = config)
+  }
+  names(mod) <- paste("alpha=", a, sep = "")
+  mod
+}
+
+
+
+.rfmodel <- function(xnew, y, x, config = config) {
+  
+  p <- dim(config)[1]
+  mod <- list()
+  est <- matrix(nrow = dim(xnew)[1], ncol = p)
+  xnew <- as.data.frame(xnew)
+  colnames(xnew) <- colnames(x)
+  
+  for ( j in 1:p ) {
+    mod[[ j ]] <- ranger::ranger(y ~., data = x, importance = "impurity_corrected",
+                                 min.node.size = config[j, 1], splitrule = "extratrees", max.depth = config[j, 2],
+                                 num.random.splits = config[j, 3], num.trees = config[j, 4])
+    est[, j] <- predict(mod[[ j ]], data = xnew)$predictions
+  }  ##  end  for ( j in dim(config)[1] ) {
+  
+  list(mod = mod, config = config, est = est)
+}
